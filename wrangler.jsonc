@@ -1,0 +1,26 @@
+{
+  // Cloudflare Worker: serves the built app from ./dist and the /api backend.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lc-daily",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [
+    // Replace the id after running: npx wrangler kv namespace create KV
+    { "binding": "KV", "id": "REPLACE_WITH_YOUR_KV_ID" }
+  ],
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "vars": {
+    "MONTHLY_CAP_USD": "2",
+    // Paste the public key printed by: npm run vapid
+    "VAPID_PUBLIC_KEY": "",
+    // Optional contact for push services, e.g. "mailto:you@example.com". Defaults to your site's URL.
+    "VAPID_SUBJECT": ""
+  }
+}
